@@ -1,0 +1,364 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px;
+}
+
+.lab-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+.lab-header h1 {
+  font-size: 1.35rem;
+  color: #38bdf8;
+}
+
+.lab-header p {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.status-pill {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid #10b981;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-blue { background: #0284c7; }
+.btn-purple { background: #7c3aed; }
+.btn-indigo { background: #4f46e5; }
+.btn-danger { background: #e11d48; }
+.btn-amber { background: #d97706; }
+
+.lesson-banner {
+  background: #1e293b;
+  border-left: 4px solid #38bdf8;
+  padding: 16px 20px;
+  border-radius: 8px;
+}
+
+.lesson-banner h3 {
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.lesson-banner p {
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.live-packet-indicator {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  background: #38bdf8;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+.stage-tag {
+  background: #0284c7;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Topology Layout */
+.topology-board {
+  display: grid;
+  grid-template-columns: 260px 90px 1fr 90px 340px;
+  align-items: center;
+  gap: 12px;
+}
+
+.node-card {
+  background: #1e293b;
+  border: 2px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.25s ease;
+}
+
+.glow-active {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+}
+
+.glow-danger {
+  border-color: #f43f5e;
+  box-shadow: 0 0 22px rgba(244, 63, 94, 0.45);
+}
+
+.node-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+
+.node-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.mechanic-box {
+  background: #0f172a;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.packet-badge {
+  margin-top: 12px;
+  background: #0ea5e9;
+  color: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.flow-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #64748b;
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.arrow-line {
+  width: 100%;
+  height: 4px;
+  background: #334155;
+  margin-top: 6px;
+  border-radius: 2px;
+  position: relative;
+}
+
+.arrow-hot .arrow-line {
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  box-shadow: 0 0 10px #38bdf8;
+}
+
+.partition-strip {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  transition: all 0.25s ease;
+}
+
+.partition-highlight {
+  border-color: #38bdf8;
+  background: rgba(14, 165, 233, 0.12);
+}
+
+.dlt-strip {
+  border-color: #881337;
+}
+
+.dlt-highlight {
+  border-color: #f43f5e;
+  background: rgba(244, 63, 94, 0.15);
+}
+
+.partition-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.offset-track {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.empty-log {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.offset-cell {
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  display: flex;
+  gap: 6px;
+  animation: popIn 0.25s ease;
+}
+
+.offset-num {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.dlt-cell {
+  border-color: #f43f5e;
+  color: #fda4af;
+}
+
+.consumers-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.worker-box {
+  background: #0f172a;
+  border: 1px solid #334155;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  transition: all 0.2s ease;
+}
+
+.worker-active {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.worker-error {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.assigned-badge {
+  background: #334155;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+}
+
+.telemetry-panel {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.telemetry-panel h3 {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: #94a3b8;
+}
+
+.log-list {
+  max-height: 230px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.log-row {
+  background: #0f172a;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-left: 3px solid #64748b;
+}
+
+.stage-PRODUCER_SENT { border-left-color: #38bdf8; }
+.stage-BROKER_ACK { border-left-color: #818cf8; }
+.stage-CONSUMER_A { border-left-color: #10b981; }
+.stage-CONSUMER_B { border-left-color: #a855f7; }
+.stage-RETRY { border-left-color: #f59e0b; }
+.stage-DLT { border-left-color: #f43f5e; }
+
+.log-badge {
+  font-weight: 700;
+  min-width: 115px;
+  font-size: 0.75rem;
+}
+
+.log-meta {
+  color: #38bdf8;
+  font-family: monospace;
+  min-width: 135px;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
