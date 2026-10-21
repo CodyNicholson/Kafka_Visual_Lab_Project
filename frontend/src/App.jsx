@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-const API_BASE = 'http://localhost:8080/api/kafka';
+const API_BASE = '/api/kafka';
 
 const LESSONS = {
   ROUND_ROBIN: {

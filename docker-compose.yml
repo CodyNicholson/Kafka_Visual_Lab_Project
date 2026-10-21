@@ -53,10 +53,22 @@ services:
       kafka-init:
         condition: service_completed_successfully
 
+  # Production build served by nginx on :80. The container name and tunnel-net match the
+  # Cloudflare tunnel route (http://rixus-frontend:80), so pipeline-run.sh can publish it.
   frontend:
     build: ./frontend
-    container_name: kafka-react-frontend
+    container_name: rixus-frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - default
+      - tunnel-net
     depends_on:
       - backend
+
+networks:
+  tunnel-net:
+    external: true

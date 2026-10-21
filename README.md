@@ -98,7 +98,9 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-The UI calls the backend at `http://localhost:8080/api/kafka`. This URL is hard-coded in `frontend/src/App.jsx`.
+The UI calls the relative path `/api/kafka`. In local dev, Vite proxies it to `http://localhost:8080` (override with `API_PROXY_TARGET`). In Docker, the frontend is a minified production build served by nginx, which proxies `/api` to the backend.
+
+`./pipeline-run.sh` deploys the stack behind the Cloudflare tunnel. It pulls the latest code, removes **all** Docker containers on the host, starts the tunnel (needs `TUNNEL_TOKEN` set globally, e.g. in `/etc/environment`) and runs `docker compose up -d --build`. The frontend container is named `rixus-frontend` on the `tunnel-net` network to match the tunnel's route.
 
 ---
 

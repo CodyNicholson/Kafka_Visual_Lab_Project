@@ -5,3 +5,4 @@ target/
 *.iml
 .vscode/
 claude_logs/
+pipeline-run.sh
