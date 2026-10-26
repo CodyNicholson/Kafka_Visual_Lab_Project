@@ -100,7 +100,16 @@ npm run dev        # http://localhost:3000
 
 The UI calls the relative path `/api/kafka`. In local dev, Vite proxies it to `http://localhost:8080` (override with `API_PROXY_TARGET`). In Docker, the frontend is a minified production build served by nginx, which proxies `/api` to the backend.
 
-`./pipeline-run.sh` deploys the stack behind the Cloudflare tunnel. It pulls the latest code, removes **all** Docker containers on the host, starts the tunnel (needs `TUNNEL_TOKEN` set globally, e.g. in `/etc/environment`) and runs `docker compose up -d --build`. The frontend container is named `rixus-frontend` on the `tunnel-net` network to match the tunnel's route.
+## Security
+
+- Host ports are bound to `127.0.0.1` only. Docker publishes ports through its own iptables rules,
+  which bypass host firewalls such as `ufw`, so a bare `3000:80` would be reachable from outside.
+- Kafka sits on `backend-net` with the backend; the public nginx container cannot reach it.
+- nginx runs unprivileged (uid 101) with all capabilities dropped, `no-new-privileges`, and memory,
+  CPU and process limits; the other containers have `no-new-privileges` and memory and process limits.
+- Every response carries `Content-Security-Policy` (same-origin only, no framing),
+  `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy`
+  (`frontend/security-headers.conf`); the nginx version is hidden.
 
 ---
 

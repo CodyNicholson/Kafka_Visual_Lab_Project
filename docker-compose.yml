@@ -1,9 +1,11 @@
+# Host ports are bound to 127.0.0.1: Docker's iptables rules bypass ufw, so a bare "3000:80"
+# be reachable from outside the server.
 services:
   kafka:
     image: apache/kafka:3.8.0
     container_name: kafka-broker
     ports:
-      - "9092:9092"
+      - "127.0.0.1:9092:9092"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -17,11 +19,17 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    networks:
+      - backend-net
     healthcheck:
       test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:29092 --list"]
       interval: 5s
       timeout: 10s
       retries: 10
+    mem_limit: 1536m
+    pids_limit: 512
+    security_opt:
+      - no-new-privileges:true
 
   kafka-init:
     image: apache/kafka:3.8.0
@@ -29,6 +37,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+    networks:
+      - backend-net
     entrypoint: [ "/bin/sh", "-c" ]
     command: |
       "
@@ -39,30 +49,47 @@ services:
       echo 'Topics successfully created:'
       /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --list
       "
+    mem_limit: 768m
+    pids_limit: 256
+    security_opt:
+      - no-new-privileges:true
 
   backend:
     build: ./backend
     container_name: kafka-spring-backend
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    networks:
+      - default
+      - backend-net
     depends_on:
       kafka:
         condition: service_healthy
       kafka-init:
         condition: service_completed_successfully
+    mem_limit: 1g
+    pids_limit: 512
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
 
-  # Production build served by nginx on :80. The container name and tunnel-net match the
-  # Cloudflare tunnel route (http://rixus-frontend:80), so pipeline-run.sh can publish it.
+  # Production build served by unprivileged nginx on :80
   frontend:
     build: ./frontend
     container_name: rixus-frontend
     ports:
-      - "3000:80"
+      - "127.0.0.1:3000:80"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 100
     networks:
       - default
       - tunnel-net
@@ -70,5 +97,8 @@ services:
       - backend
 
 networks:
+  # Kafka and the backend; the public nginx container is not on it. Not internal: Kafka
+  # publishes a loopback host port for clients on the host.
+  backend-net:
   tunnel-net:
     external: true

@@ -8,5 +8,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+# Run as an unprivileged user, not root
+RUN groupadd --system app && useradd --system --gid app --no-create-home app
+USER app
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

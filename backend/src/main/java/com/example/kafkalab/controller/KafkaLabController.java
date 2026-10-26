@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/kafka")
-@CrossOrigin(origins = "*")
 public class KafkaLabController {
 
     private final KafkaDemoService kafkaDemoService;
